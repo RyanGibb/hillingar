@@ -32,7 +32,7 @@
           in
             mkUnikernelPackages {
               # insert unikernel name here
-              unikernelName = "";
+              unikernelName = "UNIKERNEL-NAME";
               # uncomment if mirage config.ml and unikernel.ml are in another directory
               #mirageDir = "mirage"
           };

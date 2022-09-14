@@ -12,7 +12,7 @@
     };
 
     # make hillingar's inputs follow this flake
-    hillingar.url = "/home/ryan/projects/hillingar";
+    hillingar.url = "github:RyanGibb/hillingar";
     hillingar.inputs.nixpkgs.follows = "nixpkgs";
     hillingar.inputs.opam-repository.follows = "nixpkgs";
     hillingar.inputs.opam-overlays.follows = "nixpkgs";

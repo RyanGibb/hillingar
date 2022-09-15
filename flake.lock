@@ -49,11 +49,11 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1663192503,
-        "narHash": "sha256-vbyobo3DokKs/d4dlp8dIpVi3zYzXl4xo3e8VnY1Bj8=",
+        "lastModified": 1661202883,
+        "narHash": "sha256-Ky6f1ay5futNW8HYI+h3FCyBPTngAYiZzP+6AI30RCI=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "31946d7d94ea25194b8c4c23e5770ec09d42c3d0",
+        "rev": "f5357b55e4d5b51f7283fea3a1e6db2a3a86981d",
         "type": "github"
       },
       "original": {
@@ -83,13 +83,16 @@
       },
       "locked": {
         "lastModified": 1663162772,
-        "narHash": "sha256-3iBCBfofuEi+335+VLwmAefhA095+egarakQ1NtV90s=",
-        "type": "git",
-        "url": "file:///home/ryan/projects/opam-nix"
+        "narHash": "sha256-9p2fKkOC4swBxrbg+JPV8KRfxd1bL+x7Lzb+Tq/8gjU=",
+        "owner": "RyanGibb",
+        "repo": "opam-nix",
+        "rev": "82c4cb92fd4625e5f6a803d131abb994a08d8d46",
+        "type": "github"
       },
       "original": {
-        "type": "git",
-        "url": "file:///home/ryan/projects/opam-nix"
+        "owner": "RyanGibb",
+        "repo": "opam-nix",
+        "type": "github"
       }
     },
     "opam-overlays": {
@@ -111,11 +114,11 @@
     "opam-repository": {
       "flake": false,
       "locked": {
-        "lastModified": 1663189095,
-        "narHash": "sha256-C4CA1bIi4mWZRJMN6koszY3EPP58Dl+xvtgOse90VgE=",
+        "lastModified": 1661789125,
+        "narHash": "sha256-+pG5NypBCk1ZvmOsLln9I11rtSpVNx+pMR8/ei/6UYk=",
         "owner": "ocaml",
         "repo": "opam-repository",
-        "rev": "27a81c3780b7762382bd3d6c5c36f9d61b41b33a",
+        "rev": "549f56d610ae027904e52f763a45b91afad3bd79",
         "type": "github"
       },
       "original": {

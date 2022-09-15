@@ -35,7 +35,7 @@
               unikernelName = "UNIKERNEL-NAME";
               # uncomment if mirage config.ml and unikernel.ml are in another directory
               #mirageDir = "mirage"
-          };
+            } self;
 
           defaultPackage = self.packages.${system}.unix;
 

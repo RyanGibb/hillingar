@@ -6,7 +6,7 @@ let
 in rec {
   # run `mirage configure` on source,
   # with mirage, dune, and ocaml from `opam-nix`
-  configureSrcFor = unikernelName: mirageDir: target:
+  configureSrcFor = unikernelName: mirageDir: src: target:
     # Get mirage tool and dependancies from opam.
     # We could also get them from nixpkgs but they may not be up to date.
     let configure-scope = queryToScope { } { mirage = "*"; }; in
@@ -15,7 +15,7 @@ in rec {
       # only copy these files and only rebuild when they change
       src = with nix-filter.lib;
       filter {
-        root = self;
+        root = src;
         exclude = [
         (inDirectory "_build")
         (inDirectory "dist")
@@ -84,12 +84,12 @@ in rec {
       };
     in scope.overrideScope' overlay;
 
-  mkUnikernelPackages = { unikernelName, mirageDir ? "." }: let
+  mkUnikernelPackages = { unikernelName, mirageDir ? "." }: src: let
     targets = [ "xen" "qubes" "unix" "macosx" "virtio" "hvt" "spt" "muen" "genode" ];
     mapTargets = mkScope:
     let
       pipeTarget = target: lib.pipe target [
-        (configureSrcFor unikernelName mirageDir)
+        (configureSrcFor unikernelName mirageDir src)
         mkScope
       ];
       mappedTargets = builtins.map (target: nameValuePair target (pipeTarget target)) targets;

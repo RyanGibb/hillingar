@@ -41,17 +41,7 @@
 
           defaultPackage = self.packages.${system}.unix;
 
-          # sensible default
-          devShell.default = with pkgs; [
-            ocaml
-            opam
-            dune_3
-            ocamlPackages.utop
-            pkg-config
-            gcc
-            bintools-unwrapped
-            gmp
-          ];
+          devShell = import ./shell.nix { inherit pkgs; };
   });
 }
 

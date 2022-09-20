@@ -34,7 +34,7 @@
             # list external dependancies here
             depexts = with pkgs; [ ];
             # uncomment if mirage files are in another directory
-            #mirageDir = "mirage"
+            #mirageDir = "mirage";
           } self;
 
         defaultPackage = self.packages.${system}.unix;

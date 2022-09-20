@@ -1,25 +1,27 @@
 {
   inputs = {
-    # all the inputs we likely might want to have control over pinning
     nixpkgs.url = "github:nixos/nixpkgs";
-    opam-repository = {
-      url = "github:ocaml/opam-repository";
-      flake = false;
-    };
-    opam-overlays = {
-      url = "github:dune-universe/opam-overlays";
-      flake = false;
-    };
-
-    # make hillingar's inputs follow this flake
     hillingar.url = "github:RyanGibb/hillingar";
-    hillingar.inputs.nixpkgs.follows = "nixpkgs";
-    hillingar.inputs.opam-repository.follows = "opam-repository";
-    hillingar.inputs.opam-overlays.follows = "opam-overlays";
-    hillingar.inputs.flake-utils.follows = "flake-utils";
+
+    # use different repositories to those pinned in hillingar
+    #hillingar.inputs.opam-repository.follows = "opam-repository";
+    #hillingar.inputs.opam-overlays.follows = "opam-overlays";
+    #opam-repository = {
+    #  url = "github:ocaml/opam-repository";
+    #  flake = false;
+    #};
+    #opam-overlays = {
+    #  url = "github:dune-universe/opam-overlays";
+    #  flake = false;
+    #};
+
+    # make hillingar's nixpkgs follow this flake
+    # useful if pinning nixos system nixpkgs with
+    #   `nix.registry.nixpkgs.flake = nixpkgs;`
+    #hillingar.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs = { self, nixpkgs, flake-utils, opam-repository, opam-overlays, hillingar , ... }:
+  outputs = { self, nixpkgs, flake-utils, hillingar, ... }:
     flake-utils.lib.eachDefaultSystem (system:
       let 
         pkgs = nixpkgs.legacyPackages.${system};
@@ -33,7 +35,7 @@
             mkUnikernelPackages {
               # insert unikernel name here
               unikernelName = "UNIKERNEL-NAME";
-              # uncomment if mirage config.ml and unikernel.ml are in another directory
+              # uncomment if mirage files are in another directory
               #mirageDir = "mirage"
             } self;
 
@@ -52,3 +54,4 @@
           ];
   });
 }
+

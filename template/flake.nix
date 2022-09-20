@@ -35,6 +35,8 @@
             mkUnikernelPackages {
               # insert unikernel name here
               unikernelName = "UNIKERNEL-NAME";
+              # list external dependancies here
+              depexts = with pkgs; [ ];
               # uncomment if mirage files are in another directory
               #mirageDir = "mirage"
             } self;

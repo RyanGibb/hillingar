@@ -47,14 +47,22 @@ in rec {
   mkScopeMonorepo = src: buildOpamMonorepo { } src { };
 
   # read all the opam files from the configured source and build the ${unikernelName} package
-  mkScopeOpam = unikernelName: mirageDir: src:
+  mkScopeOpam = unikernelName: mirageDir: depexts: src:
     let
-      scope = buildOpamProject { } unikernelName src { };
+      scope = buildOpamProject {
+        resolveArgs.env = {
+          os = "linux";
+          os-distribution = "nixos";
+          os-family = "nixos";
+        };
+      } unikernelName src { };
       overlay = final: prev: {
         "${unikernelName}" = prev.${unikernelName}.overrideAttrs (_ :
           let monorepo-scope = mkScopeMonorepo src; in
           {
           phases = [ "unpackPhase" "preBuild" "buildPhase" "installPhase" ];
+          # TODO pick depexts of deps in monorepo
+          buildInputs = prev.${unikernelName}.buildInputs ++ depexts;
           preBuild =
             let
             # TODO get dune build to pick up symlinks
@@ -84,7 +92,7 @@ in rec {
       };
     in scope.overrideScope' overlay;
 
-  mkUnikernelPackages = { unikernelName, mirageDir ? "." }: src: let
+  mkUnikernelPackages = { unikernelName, mirageDir ? ".", depexts ? [ ] }: src: let
     targets = [ "xen" "qubes" "unix" "macosx" "virtio" "hvt" "spt" "muen" "genode" ];
     mapTargets = mkScope:
     let
@@ -96,10 +104,10 @@ in rec {
     in builtins.listToAttrs mappedTargets;
       targetUnikernels = mapAttrs'
         (target: scope: nameValuePair target scope.${unikernelName})
-        (mapTargets (mkScopeOpam unikernelName mirageDir));
+        (mapTargets (mkScopeOpam unikernelName mirageDir depexts));
       targetScopes = mapAttrs'
         (target: scope: nameValuePair "${target}-scope" scope)
-        (mapTargets (mkScopeOpam unikernelName mirageDir));
+        (mapTargets (mkScopeOpam unikernelName mirageDir depexts));
       targetMonorepoScopes = mapAttrs'
         (target: scope: nameValuePair "${target}-monorepo" scope)
         (mapTargets mkScopeMonorepo);

@@ -49,13 +49,7 @@ in rec {
   # read all the opam files from the configured source and build the ${unikernelName} package
   mkScopeOpam = unikernelName: mirageDir: depexts: src:
     let
-      scope = buildOpamProject {
-        resolveArgs.env = {
-          os = "linux";
-          os-distribution = "nixos";
-          os-family = "nixos";
-        };
-      } unikernelName src { };
+      scope = buildOpamProject { } unikernelName src { };
       overlay = final: prev: {
         "${unikernelName}" = prev.${unikernelName}.overrideAttrs (_ :
           let monorepo-scope = mkScopeMonorepo src; in

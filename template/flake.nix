@@ -23,7 +23,7 @@
 
   outputs = { self, nixpkgs, flake-utils, hillingar, ... }:
     flake-utils.lib.eachDefaultSystem (system:
-      let 
+      let
         pkgs = nixpkgs.legacyPackages.${system};
       in
       {

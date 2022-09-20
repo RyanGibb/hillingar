@@ -52,35 +52,32 @@ in rec {
       scope = buildOpamProject { } unikernelName src { };
       overlay = final: prev: {
         "${unikernelName}" = prev.${unikernelName}.overrideAttrs (_ :
-          let monorepo-scope = mkScopeMonorepo src; in
-          {
-          phases = [ "unpackPhase" "preBuild" "buildPhase" "installPhase" ];
-          # TODO pick depexts of deps in monorepo
-          buildInputs = prev.${unikernelName}.buildInputs ++ depexts;
-          preBuild =
-            let
-            # TODO get dune build to pick up symlinks
-            createDep = name: path: "cp -r ${path} duniverse/${name}";
-            createDeps = mapAttrsToList createDep monorepo-scope;
-            createDuniverse = builtins.concatStringsSep "\n" createDeps;
-            in
-          ''
-            # find solo5 toolchain
-            ${if final ? ocaml-solo5 then
-            "export OCAMLFIND_CONF=\"${final.ocaml-solo5}/lib/findlib.conf\""
-            else ""}
-            # create duniverse
-            mkdir duniverse
-            echo '(vendored_dirs *)' > duniverse/dune
-            ${createDuniverse}
-          '';
-          buildPhase = ''
-            dune build ${mirageDir}
-          '';
-          installPhase = ''
-            mkdir $out
-            cp -L ./dist/${unikernelName}* $out/
-          '';
+          let monorepo-scope = mkScopeMonorepo src; in {
+            phases = [ "unpackPhase" "preBuild" "buildPhase" "installPhase" ];
+            # TODO pick depexts of deps in monorepo
+            buildInputs = prev.${unikernelName}.buildInputs ++ depexts;
+            preBuild = let
+              # TODO get dune build to pick up symlinks
+              createDep = name: path: "cp -r ${path} duniverse/${name}";
+              createDeps = mapAttrsToList createDep monorepo-scope;
+              createDuniverse = builtins.concatStringsSep "\n" createDeps;
+            in ''
+              # find solo5 toolchain
+              ${if final ? ocaml-solo5 then
+              "export OCAMLFIND_CONF=\"${final.ocaml-solo5}/lib/findlib.conf\""
+              else ""}
+              # create duniverse
+              mkdir duniverse
+              echo '(vendored_dirs *)' > duniverse/dune
+              ${createDuniverse}
+            '';
+            buildPhase = ''
+              dune build ${mirageDir}
+            '';
+            installPhase = ''
+              mkdir $out
+              cp -L ./dist/${unikernelName}* $out/
+            '';
           }
         );
       };

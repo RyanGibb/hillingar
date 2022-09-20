@@ -23,27 +23,23 @@
 
   outputs = { self, nixpkgs, flake-utils, hillingar, ... }:
     flake-utils.lib.eachDefaultSystem (system:
-      let
-        pkgs = nixpkgs.legacyPackages.${system};
-      in
-      {
-        packages =
-          let
-            mirage-nix = (hillingar.lib.${system});
-            inherit (mirage-nix) mkUnikernelPackages;
-          in
-            mkUnikernelPackages {
-              # insert unikernel name here
-              unikernelName = "UNIKERNEL-NAME";
-              # list external dependancies here
-              depexts = with pkgs; [ ];
-              # uncomment if mirage files are in another directory
-              #mirageDir = "mirage"
-            } self;
+      let pkgs = nixpkgs.legacyPackages.${system}; in {
+        packages = let
+          mirage-nix = (hillingar.lib.${system});
+          inherit (mirage-nix) mkUnikernelPackages;
+        in
+          mkUnikernelPackages {
+            # insert unikernel name here
+            unikernelName = "UNIKERNEL-NAME";
+            # list external dependancies here
+            depexts = with pkgs; [ ];
+            # uncomment if mirage files are in another directory
+            #mirageDir = "mirage"
+          } self;
 
-          defaultPackage = self.packages.${system}.unix;
+        defaultPackage = self.packages.${system}.unix;
 
-          devShell = import ./shell.nix { inherit pkgs; };
-  });
+        devShell = import ./shell.nix { inherit pkgs; };
+      }
+    );
 }
-

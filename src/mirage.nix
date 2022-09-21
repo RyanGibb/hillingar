@@ -77,7 +77,7 @@ in rec {
             '';
             installPhase = ''
               mkdir $out
-              cp -L ./dist/${unikernelName}* $out/
+              cp -L ${mirageDir}/dist/${unikernelName}* $out/
             '';
           }
         );

@@ -72,7 +72,8 @@ in rec {
               ${createDuniverse}
             '';
             buildPhase = ''
-              dune build ${mirageDir}
+              # don't fail on warnings
+              dune build ${mirageDir} --profile release
             '';
             installPhase = ''
               mkdir $out

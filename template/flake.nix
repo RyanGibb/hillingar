@@ -29,11 +29,10 @@
           inherit (mirage-nix) mkUnikernelPackages;
         in
           mkUnikernelPackages {
-            # insert unikernel name here
-            unikernelName = "UNIKERNEL-NAME";
+            unikernelName = throw "Put the unikernel name here";
             # list external dependancies here
             depexts = with pkgs; [ ];
-            # uncomment if mirage files are in another directory
+            # specify mirage files in a non-root directory
             #mirageDir = "mirage";
           } self;
 

@@ -7,7 +7,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    opam-nix.url = "github:RyanGibb/opam-nix";
+    opam-nix.url = "github:tweag/opam-nix";
     opam-nix.inputs.nixpkgs.follows = "nixpkgs";
     opam-nix.inputs.flake-utils.follows = "flake-utils";
 

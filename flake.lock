@@ -31,6 +31,22 @@
         "type": "github"
       }
     },
+    "mirage-opam-overlays": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1661959605,
+        "narHash": "sha256-CPTuhYML3F4J58flfp3ZbMNhkRkVFKmBEYBZY5tnQwA=",
+        "owner": "dune-universe",
+        "repo": "mirage-opam-overlays",
+        "rev": "05f1c1823d891ce4d8adab91f5db3ac51d86dc0b",
+        "type": "github"
+      },
+      "original": {
+        "owner": "dune-universe",
+        "repo": "mirage-opam-overlays",
+        "type": "github"
+      }
+    },
     "nix-filter": {
       "locked": {
         "lastModified": 1659352118,
@@ -68,6 +84,7 @@
         "flake-utils": [
           "flake-utils"
         ],
+        "mirage-opam-overlays": "mirage-opam-overlays",
         "nixpkgs": [
           "nixpkgs"
         ],
@@ -82,15 +99,15 @@
         ]
       },
       "locked": {
-        "lastModified": 1663162772,
-        "narHash": "sha256-9p2fKkOC4swBxrbg+JPV8KRfxd1bL+x7Lzb+Tq/8gjU=",
-        "owner": "RyanGibb",
+        "lastModified": 1663858382,
+        "narHash": "sha256-rpYaFnIcO65+2yDz5gwIG93b1etA6lE0hxqLaMIzDao=",
+        "owner": "tweag",
         "repo": "opam-nix",
-        "rev": "82c4cb92fd4625e5f6a803d131abb994a08d8d46",
+        "rev": "ea5924dcde987f116719d9a0083f44d87b4010d0",
         "type": "github"
       },
       "original": {
-        "owner": "RyanGibb",
+        "owner": "tweag",
         "repo": "opam-nix",
         "type": "github"
       }

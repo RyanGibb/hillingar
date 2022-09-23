@@ -35,10 +35,10 @@ in rec {
       nativeBuildInputs = with configure-scope; [ dune ocaml ];
       phases = [ "unpackPhase" "configurePhase" "installPhase" "fixupPhase" ];
       configurePhase = ''
-      mirage configure -f ${mirageDir}/config.ml -t ${target}
-      # Rename the opam file for package name consistency
-      # And move to root so a recursive search for opam files isn't required
-      cp ${mirageDir}/mirage/${unikernelName}-${target}.opam ${unikernelName}.opam
+        mirage configure -f ${mirageDir}/config.ml -t ${target}
+        # Rename the opam file for package name consistency
+        # And move to root so a recursive search for opam files isn't required
+        cp ${mirageDir}/mirage/${unikernelName}-${target}.opam ${unikernelName}.opam
       '';
       installPhase = "cp -R . $out";
     };

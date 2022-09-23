@@ -84,24 +84,26 @@ in rec {
       };
     in scope.overrideScope' overlay;
 
-  mkUnikernelPackages = { unikernelName, mirageDir ? ".", depexts ? [ ] }: src: let
-    targets = [ "xen" "qubes" "unix" "macosx" "virtio" "hvt" "spt" "muen" "genode" ];
-    mapTargets = mkScope:
-    let
-      pipeTarget = target: lib.pipe target [
-        (configureSrcFor unikernelName mirageDir src)
-        mkScope
-      ];
-      mappedTargets = builtins.map (target: nameValuePair target (pipeTarget target)) targets;
-    in builtins.listToAttrs mappedTargets;
-      targetUnikernels = mapAttrs'
-        (target: scope: nameValuePair target scope.${unikernelName})
-        (mapTargets (mkScopeOpam unikernelName mirageDir depexts));
-      targetScopes = mapAttrs'
-        (target: scope: nameValuePair "${target}-scope" scope)
-        (mapTargets (mkScopeOpam unikernelName mirageDir depexts));
-      targetMonorepoScopes = mapAttrs'
-        (target: scope: nameValuePair "${target}-monorepo" scope)
-        (mapTargets mkScopeMonorepo);
-  in targetUnikernels // targetScopes // targetMonorepoScopes;
+  # we depend on opam as some packages rely on it implicitly
+  mkUnikernelPackages = { unikernelName, mirageDir ? ".", depexts ? with pkgs; [ opam ] }:
+    src: let
+      targets = [ "xen" "qubes" "unix" "macosx" "virtio" "hvt" "spt" "muen" "genode" ];
+      mapTargets = mkScope:
+      let
+        pipeTarget = target: lib.pipe target [
+          (configureSrcFor unikernelName mirageDir src)
+          mkScope
+        ];
+        mappedTargets = builtins.map (target: nameValuePair target (pipeTarget target)) targets;
+      in builtins.listToAttrs mappedTargets;
+        targetUnikernels = mapAttrs'
+          (target: scope: nameValuePair target scope.${unikernelName})
+          (mapTargets (mkScopeOpam unikernelName mirageDir depexts));
+        targetScopes = mapAttrs'
+          (target: scope: nameValuePair "${target}-scope" scope)
+          (mapTargets (mkScopeOpam unikernelName mirageDir depexts));
+        targetMonorepoScopes = mapAttrs'
+          (target: scope: nameValuePair "${target}-monorepo" scope)
+          (mapTargets mkScopeMonorepo);
+    in targetUnikernels // targetScopes // targetMonorepoScopes;
 }

@@ -85,8 +85,7 @@ in rec {
       };
     in scope.overrideScope' overlay;
 
-  # we depend on opam as some packages rely on it implicitly
-  mkUnikernelPackages = { unikernelName, mirageDir ? ".", depexts ? with pkgs; [ opam ] }:
+  mkUnikernelPackages = { unikernelName, mirageDir ? ".", depexts ? with pkgs; [ ] }:
     src: let
       targets = [ "xen" "qubes" "unix" "macosx" "virtio" "hvt" "spt" "muen" "genode" ];
       mapTargets = mkScope:

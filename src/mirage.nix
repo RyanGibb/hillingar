@@ -64,7 +64,7 @@ in rec {
             in ''
               # find solo5 toolchain
               ${if final ? ocaml-solo5 then
-              "export OCAMLFIND_CONF=\"${final.ocaml-solo5}/lib/findlib.conf\""
+                "export OCAMLFIND_CONF=\"${final.ocaml-solo5}/lib/findlib.conf\""
               else ""}
               # create duniverse
               mkdir duniverse

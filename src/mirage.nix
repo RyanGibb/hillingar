@@ -44,15 +44,15 @@ in rec {
     };
 
   # collect all dependancy sources in a scope
-  mkScopeMonorepo = src: buildOpamMonorepo { } src { };
+  mkScopeMonorepo = monorepoQuery: src: buildOpamMonorepo { } src monorepoQuery;
 
   # read all the opam files from the configured source and build the ${unikernelName} package
-  mkScopeOpam = unikernelName: mirageDir: depexts: src:
+  mkScopeOpam = unikernelName: mirageDir: depexts: monorepoQuery: src:
     let
       scope = buildOpamProject { } unikernelName src { };
       overlay = final: prev: {
         "${unikernelName}" = prev.${unikernelName}.overrideAttrs (_ :
-          let monorepo-scope = mkScopeMonorepo src; in {
+          let monorepo-scope = mkScopeMonorepo monorepoQuery src; in {
             phases = [ "unpackPhase" "preBuild" "buildPhase" "installPhase" ];
             # TODO pick depexts of deps in monorepo
             buildInputs = prev.${unikernelName}.buildInputs;
@@ -85,7 +85,7 @@ in rec {
       };
     in scope.overrideScope' overlay;
 
-  mkUnikernelPackages = { unikernelName, mirageDir ? ".", depexts ? with pkgs; [ ] }:
+  mkUnikernelPackages = { unikernelName, mirageDir ? ".", depexts ? with pkgs; [ ], monorepoQuery ? { } }:
     src: let
       targets = [ "xen" "qubes" "unix" "macosx" "virtio" "hvt" "spt" "muen" "genode" ];
       mapTargets = mkScope:
@@ -98,12 +98,12 @@ in rec {
       in builtins.listToAttrs mappedTargets;
         targetUnikernels = mapAttrs'
           (target: scope: nameValuePair target scope.${unikernelName})
-          (mapTargets (mkScopeOpam unikernelName mirageDir depexts));
+          (mapTargets (mkScopeOpam unikernelName mirageDir depexts monorepoQuery));
         targetScopes = mapAttrs'
           (target: scope: nameValuePair "${target}-scope" scope)
           (mapTargets (mkScopeOpam unikernelName mirageDir depexts));
         targetMonorepoScopes = mapAttrs'
           (target: scope: nameValuePair "${target}-monorepo" scope)
-          (mapTargets mkScopeMonorepo);
+          (mapTargets (mkScopeMonorepo monorepoQuery));
     in targetUnikernels // targetScopes // targetMonorepoScopes;
 }

@@ -44,19 +44,47 @@ in rec {
     };
 
   # collect all dependancy sources in a scope
-  mkScopeMonorepo = src: buildOpamMonorepo { } src { };
+  mkScopeMonorepo = src: buildOpamMonorepo { } src { gmp = "*"; };
+
+  # create an opam switch in a nix derivation to access opam variables,
+  # like for https://github.com/mirage/ocaml-gmp/pull/18
+  mkOpamSwitch = repo: pkgs.stdenv.mkDerivation {
+    name = "opam-switch";
+    phases = [ "buildPhase" "installPhase" ];
+    nativeBuildInputs = with pkgs; [ opam ];
+    buildPhase = let
+      localrepo = "localrepo";
+    in ''
+      export HOME=$(pwd)
+      # we need to copy all the files to a writable or else opam complains
+      cp -r --no-preserve=mode,ownership ${repo} ${localrepo}
+      # as we don't have network access,
+      # use a local directory as the package repository,
+      # don't install compiler,
+      # and don't do opam sandboxing inside nix sandboxing
+      opam init local ${localrepo} --bare --disable-sandboxing
+      # TODO --bare doesn't install a default switch,
+      # but `opam config subst` needs a default switch
+    '';
+    installPhase = ''
+      mkdir $out
+      cp -r .opam/* $out
+    '';
+  };
 
   # read all the opam files from the configured source and build the ${unikernelName} package
   mkScopeOpam = unikernelName: mirageDir: depexts: src:
     let
       scope = buildOpamProject { } unikernelName src { };
+      opamSwitch = mkOpamSwitch opam-repository;
       overlay = final: prev: {
         "${unikernelName}" = prev.${unikernelName}.overrideAttrs (_ :
           let monorepo-scope = mkScopeMonorepo src; in {
             phases = [ "unpackPhase" "preBuild" "buildPhase" "installPhase" ];
             # TODO pick depexts of deps in monorepo
-            buildInputs = prev.${unikernelName}.buildInputs;
-            nativeBuildInputs = depexts;
+            buildInputs = prev.${unikernelName}.buildInputs ++ depexts;
+            # for opam commands with `opamSwitch`
+            nativeBuildInputs = with pkgs; [ opam ];
             preBuild = let
               # TODO get dune build to pick up symlinks
               createDep = name: path: "cp -r ${path} duniverse/${name}";
@@ -73,6 +101,9 @@ in rec {
               ${createDuniverse}
             '';
             buildPhase = ''
+              # so opam can find .opam dir
+              export HOME="$(pwd)"
+              cp -r ${opamSwitch} .opam
               # don't fail on warnings
               dune build ${mirageDir} --profile release
             '';

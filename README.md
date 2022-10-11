@@ -13,5 +13,5 @@ $ nix flake new . -t github:/RyanGibb/hillingar
 # substitute the name of the unikernel you're building
 $ sed -i 's/throw "Put the unikernel name here"/"<unikernel-name>"/g' flake.nix
 # build the unikernel with Nix
-$ nix build .#<target>
+$ nix build .\#<target>
 ```

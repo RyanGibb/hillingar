@@ -12,6 +12,6 @@ To build a [MirageOS](https://mirage.io) unikernel with [Nix](https://nixos.org)
 $ nix flake new . -t github:/RyanGibb/hillingar
 # substitute the name of the unikernel you're building
 $ sed -i 's/throw "Put the unikernel name here"/"<unikernel-name>"/g' flake.nix
-# build the unikernel with Nix
+# build the unikernel with Nix for a particular target
 $ nix build .\#<target>
 ```

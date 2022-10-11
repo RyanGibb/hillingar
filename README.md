@@ -4,7 +4,7 @@
 <div align="center">
     <table>
         <tbody>
-            <tr>
+            <tr class="odd">
                 <td style="text-align: center;"><img width="200" src="readme/nix-snowflake.svg" alt="Nix snowflake"></td>
                 <td style="text-align: center;"><img width="200" src="readme/mirage-logo.svg" alt="Mirage logo"></td>
             </tr>

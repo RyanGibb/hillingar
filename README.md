@@ -2,14 +2,8 @@
 # Hillingar
 
 <div align="center">
-    <table style="border: none;">
-        <tbody style="border: none;">
-            <tr style="border: none;">
-                <td style="text-align: center; border: none;"><img width="200" src="readme/nix-snowflake.svg" alt="Nix snowflake"></td>
-                <td style="text-align: center; border: none;"><img width="200" src="readme/mirage-logo.svg" alt="Mirage logo"></td>
-            </tr>
-        </tbody>
-    </table>
+    <img width="200" src="readme/nix-snowflake.svg" alt="Nix snowflake">
+    <img width="200" src="readme/mirage-logo.svg" alt="Mirage logo"></td>
 </div>
 
 To build a [MirageOS](https://mirage.io) unikernel with [nix](https://nixos.org):

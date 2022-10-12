@@ -15,3 +15,4 @@ $ sed -i 's/throw "Put the unikernel name here"/"<unikernel-name>"/g' flake.nix
 # build the unikernel with Nix for a particular target
 $ nix build .\#<target>
 ```
+Build on top of [tweag/opam-nix/pull/18](https://github.com/tweag/opam-nix/pull/18).

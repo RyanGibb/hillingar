@@ -18,4 +18,4 @@ $ nix build .\#<target>
 
 Read more at [gibbr.org/blog/hillingar](https://gibbr.org/blog/hillingar).
 
-Build on top of [tweag/opam-nix/pull/18](https://github.com/tweag/opam-nix/pull/18).
+Built on top of [tweag/opam-nix/pull/18](https://github.com/tweag/opam-nix/pull/18).

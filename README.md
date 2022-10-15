@@ -8,7 +8,7 @@
 
 To build a [MirageOS](https://mirage.io) unikernel with [Nix](https://nixos.org):
 ```bash
-# create a flake from this project's default template
+# create a flake from Hillingar's default template
 $ nix flake new . -t github:/RyanGibb/hillingar
 # substitute the name of the unikernel you're building
 $ sed -i 's/throw "Put the unikernel name here"/"<unikernel-name>"/g' flake.nix

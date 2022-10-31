@@ -18,4 +18,6 @@ $ nix build .\#<target>
 
 Read more at [gibbr.org/blog/hillingar](https://gibbr.org/blog/hillingar).
 
+See an example at [RyanGibb/mirage-hello-hillingar](https://github.com/RyanGibb/mirage-hello-hillingar).
+
 Built on top of [tweag/opam-nix/pull/18](https://github.com/tweag/opam-nix/pull/18).

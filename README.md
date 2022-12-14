@@ -16,7 +16,7 @@ $ sed -i 's/throw "Put the unikernel name here"/"<unikernel-name>"/g' flake.nix
 $ nix build .\#<target>
 ```
 
-Read more at [gibbr.org/blog/hillingar](https://gibbr.org/blog/hillingar).
+Read more at [gibbr.org/blog/hillingar](https://ryan.freumh.org/blog/hillingar).
 
 See an example at [RyanGibb/mirage-hello-hillingar](https://github.com/RyanGibb/mirage-hello-hillingar).
 

@@ -101,7 +101,7 @@ in rec {
           (mapTargets (mkScopeOpam unikernelName mirageDir depexts monorepoQuery));
         targetScopes = mapAttrs'
           (target: scope: nameValuePair "${target}-scope" scope)
-          (mapTargets (mkScopeOpam unikernelName mirageDir depexts));
+          (mapTargets (mkScopeOpam unikernelName mirageDir depexts monorepoQuery));
         targetMonorepoScopes = mapAttrs'
           (target: scope: nameValuePair "${target}-monorepo" scope)
           (mapTargets (mkScopeMonorepo monorepoQuery));

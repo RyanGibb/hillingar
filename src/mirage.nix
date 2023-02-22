@@ -105,5 +105,8 @@ in rec {
         targetMonorepoScopes = mapAttrs'
           (target: scope: nameValuePair "${target}-monorepo" scope)
           (mapTargets (mkScopeMonorepo monorepoQuery));
-    in targetUnikernels // targetScopes // targetMonorepoScopes;
+        targetConfigured = mapAttrs'
+          (target: scope: nameValuePair "${target}-configured" scope)
+          (mapTargets (src: src));
+    in targetUnikernels // targetScopes // targetMonorepoScopes // targetConfigured;
 }

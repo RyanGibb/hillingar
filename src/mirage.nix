@@ -6,10 +6,10 @@ let
 in rec {
   # run `mirage configure` on source,
   # with mirage, dune, and ocaml from `opam-nix`
-  configureSrcFor = unikernelName: mirageDir: src: target:
+  configureSrcFor = unikernelName: mirageDir: query: src: target:
     # Get mirage tool and dependancies from opam.
     # We could also get them from nixpkgs but they may not be up to date.
-    let configure-scope = queryToScope { } { mirage = "*"; }; in
+    let configure-scope = queryToScope { } ({ mirage = "*"; } // query); in
     pkgs.stdenv.mkDerivation {
       name = "configured-src";
       # only copy these files and only rebuild when they change
@@ -47,9 +47,9 @@ in rec {
   mkScopeMonorepo = monorepoQuery: src: buildOpamMonorepo { } src monorepoQuery;
 
   # read all the opam files from the configured source and build the ${unikernelName} package
-  mkScopeOpam = unikernelName: mirageDir: depexts: monorepoQuery: src:
+  mkScopeOpam = unikernelName: mirageDir: depexts: monorepoQuery: query: src:
     let
-      scope = buildOpamProject { } unikernelName src { };
+      scope = buildOpamProject { } unikernelName src query;
       overlay = final: prev: {
         "${unikernelName}" = prev.${unikernelName}.overrideAttrs (_ :
           let monorepo-scope = mkScopeMonorepo monorepoQuery src; in {
@@ -85,23 +85,23 @@ in rec {
       };
     in scope.overrideScope' overlay;
 
-  mkUnikernelPackages = { unikernelName, mirageDir ? ".", depexts ? with pkgs; [ ], monorepoQuery ? { } }:
+  mkUnikernelPackages = { unikernelName, mirageDir ? ".", depexts ? with pkgs; [ ], monorepoQuery ? { }, query ? { } }:
     src: let
       targets = [ "xen" "qubes" "unix" "macosx" "virtio" "hvt" "spt" "muen" "genode" ];
       mapTargets = mkScope:
       let
         pipeTarget = target: lib.pipe target [
-          (configureSrcFor unikernelName mirageDir src)
+          (configureSrcFor unikernelName mirageDir query src)
           mkScope
         ];
         mappedTargets = builtins.map (target: nameValuePair target (pipeTarget target)) targets;
       in builtins.listToAttrs mappedTargets;
         targetUnikernels = mapAttrs'
           (target: scope: nameValuePair target scope.${unikernelName})
-          (mapTargets (mkScopeOpam unikernelName mirageDir depexts monorepoQuery));
+          (mapTargets (mkScopeOpam unikernelName mirageDir depexts monorepoQuery query));
         targetScopes = mapAttrs'
           (target: scope: nameValuePair "${target}-scope" scope)
-          (mapTargets (mkScopeOpam unikernelName mirageDir depexts monorepoQuery));
+          (mapTargets (mkScopeOpam unikernelName mirageDir depexts monorepoQuery query));
         targetMonorepoScopes = mapAttrs'
           (target: scope: nameValuePair "${target}-monorepo" scope)
           (mapTargets (mkScopeMonorepo monorepoQuery));

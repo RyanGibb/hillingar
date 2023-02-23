@@ -47,9 +47,9 @@ in rec {
   mkScopeMonorepo = monorepoQuery: src: buildOpamMonorepo { } src monorepoQuery;
 
   # read all the opam files from the configured source and build the ${unikernelName} package
-  mkScopeOpam = unikernelName: mirageDir: depexts: monorepoQuery: query: src:
+  mkScopeOpam = unikernelName: mirageDir: depexts: monorepoQuery: queryArgs: query: src:
     let
-      scope = buildOpamProject { } unikernelName src query;
+      scope = buildOpamProject queryArgs unikernelName src query;
       overlay = final: prev: {
         "${unikernelName}" = prev.${unikernelName}.overrideAttrs (_ :
           let monorepo-scope = mkScopeMonorepo monorepoQuery src; in {
@@ -85,7 +85,7 @@ in rec {
       };
     in scope.overrideScope' overlay;
 
-  mkUnikernelPackages = { unikernelName, mirageDir ? ".", depexts ? with pkgs; [ ], monorepoQuery ? { }, query ? { } }:
+  mkUnikernelPackages = { unikernelName, mirageDir ? ".", depexts ? with pkgs; [ ], overlays ? [ ], monorepoQuery ? { }, queryArgs ? { }, query ? { } }:
     src: let
       targets = [ "xen" "qubes" "unix" "macosx" "virtio" "hvt" "spt" "muen" "genode" ];
       mapTargets = mkScope:
@@ -98,10 +98,10 @@ in rec {
       in builtins.listToAttrs mappedTargets;
         targetUnikernels = mapAttrs'
           (target: scope: nameValuePair target scope.${unikernelName})
-          (mapTargets (mkScopeOpam unikernelName mirageDir depexts monorepoQuery query));
+          (mapTargets (mkScopeOpam unikernelName mirageDir depexts monorepoQuery queryArgs query));
         targetScopes = mapAttrs'
           (target: scope: nameValuePair "${target}-scope" scope)
-          (mapTargets (mkScopeOpam unikernelName mirageDir depexts monorepoQuery query));
+          (mapTargets (mkScopeOpam unikernelName mirageDir depexts monorepoQuery queryArgs query));
         targetMonorepoScopes = mapAttrs'
           (target: scope: nameValuePair "${target}-monorepo" scope)
           (mapTargets (mkScopeMonorepo monorepoQuery));

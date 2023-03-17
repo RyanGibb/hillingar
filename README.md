@@ -1,6 +1,8 @@
 
 # Hillingar
 
+> An arctic mirage
+
 <div align="center">
     <img width="200" src="readme/nix-snowflake.svg" alt="Nix snowflake">
     <img width="200" src="readme/mirage-logo.svg" alt="Mirage logo"></td>

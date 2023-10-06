@@ -44,7 +44,7 @@
               ocaml-base-compiler = "*";
               mirage = "4.3.3";
             };
-          } self;
+          } ./.;
 
         defaultPackage = self.packages.${system}.unix;
       }

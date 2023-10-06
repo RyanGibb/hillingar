@@ -85,17 +85,36 @@ in rec {
       };
     in scope.overrideScope' overlay;
 
-  mkUnikernelPackages = { unikernelName, mirageDir ? ".", depexts ? with pkgs; [ ], overlays ? [ ], monorepoQuery ? { }, queryArgs ? { }, query ? { } }:
-    src: let
-      targets = [ "xen" "qubes" "unix" "macosx" "virtio" "hvt" "spt" "muen" "genode" ];
-      mapTargets = mkScope:
+  mkUnikernelPackages = {
+      unikernelName,
+      mirageDir ? ".",
+      depexts ? with pkgs; [ ],
+      overlays ? [ ],
+      monorepoQuery ? { },
+      queryArgs ? { },
+      query ? { },
+      configured ? false
+    }: src:
+    if configured then
+      {
+        unikernel =
+          (mkScopeOpam unikernelName mirageDir depexts monorepoQuery queryArgs query src).${unikernelName};
+        scope =
+          mkScopeOpam unikernelName mirageDir depexts monorepoQuery queryArgs query src;
+        monorepo =
+          mkScopeMonorepo monorepoQuery;
+      }
+    else
       let
-        pipeTarget = target: lib.pipe target [
-          (configureSrcFor unikernelName mirageDir query src)
-          mkScope
-        ];
-        mappedTargets = builtins.map (target: nameValuePair target (pipeTarget target)) targets;
-      in builtins.listToAttrs mappedTargets;
+        targets = [ "xen" "qubes" "unix" "macosx" "virtio" "hvt" "spt" "muen" "genode" ];
+        mapTargets = mkScope:
+          let
+            pipeTarget = target: lib.pipe target [
+              (configureSrcFor unikernelName mirageDir query src)
+              mkScope
+            ];
+            mappedTargets = builtins.map (target: nameValuePair target (pipeTarget target)) targets;
+          in builtins.listToAttrs mappedTargets;
         targetUnikernels = mapAttrs'
           (target: scope: nameValuePair target scope.${unikernelName})
           (mapTargets (mkScopeOpam unikernelName mirageDir depexts monorepoQuery queryArgs query));
@@ -108,5 +127,5 @@ in rec {
         targetConfigured = mapAttrs'
           (target: scope: nameValuePair "${target}-configured" scope)
           (mapTargets (src: src));
-    in targetUnikernels // targetScopes // targetMonorepoScopes // targetConfigured;
+      in targetUnikernels // targetScopes // targetMonorepoScopes // targetConfigured;
 }

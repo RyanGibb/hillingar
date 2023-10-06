@@ -20,6 +20,10 @@ $ nix build .\#<target>
 
 Read more at [ryan.freumh.org/blog/hillingar](https://ryan.freumh.org/blog/hillingar).
 
-See an example in [example](example), and build it from the project root with `nix build .\?dir=example`.
+See an example in [examples/hello](examples/hello), and build it from the project root with `nix build .\?dir=examples/hello`.
 
 Built on top of [tweag/opam-nix/pull/18](https://github.com/tweag/opam-nix/pull/18).
+
+### Configured Unikernels
+
+If you've already configured your unikernel with `mirage configure`, see [examples/hello-configured](examples/hello-configured) for an example of using Hillingar. Build it from the project root with `nix build .\?dir=examples/hello-configured`.

@@ -30,7 +30,7 @@
         in
           mkUnikernelPackages {
             unikernelName = throw "Put the unikernel name here";
-            # list external dependancies here
+            # list external dependencies here
             depexts = with pkgs; [ ];
             # specify mirage files in a non-root directory
             #mirageDir = "mirage";

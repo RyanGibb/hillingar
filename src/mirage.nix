@@ -55,8 +55,7 @@ in rec {
           let monorepo-scope = mkScopeMonorepo monorepoQuery src; in {
             phases = [ "unpackPhase" "preBuild" "buildPhase" "installPhase" ];
             # TODO pick depexts of deps in monorepo
-            buildInputs = prev.${unikernelName}.buildInputs;
-            nativeBuildInputs = depexts;
+            buildInputs = prev.${unikernelName}.buildInputs ++ depexts;
             preBuild = let
               # TODO get dune build to pick up symlinks
               createDep = name: path: "cp -r ${path} duniverse/${name}";

@@ -23,36 +23,35 @@
 
   outputs = { self, nixpkgs, flake-utils, hillingar, ... }:
     flake-utils.lib.eachDefaultSystem (system:
-      let pkgs = nixpkgs.legacyPackages.${system}; in {
+      let pkgs = nixpkgs.legacyPackages.${system};
+      in {
         packages = let
           mirage-nix = (hillingar.lib.${system});
           inherit (mirage-nix) mkUnikernelPackages;
-        in
-          mkUnikernelPackages {
-            unikernelName = throw "Put the unikernel name here";
-            # list external dependencies here
-            depexts = with pkgs; [ ];
-            # specify mirage files in a non-root directory
-            #mirageDir = "mirage";
-            monorepoQuery = {
-              # solve for non-trunk compiler
-              ocaml-base-compiler = "*";
-              # workaround https://github.com/RyanGibb/hillingar/issues/3
-              # if a package doesn't have an overlay to build with dune
-              # find a version https://github.com/dune-universe/opam-overlays/
-              # or
-              # find a version https://github.com/dune-universe/mirage-opam-overlays/
-              #<package> = "<version>";
-            };
-            query = {
-              # solve for non-trunk compiler
-              ocaml-base-compiler = "*";
-              # use a specific version of mirage
-              #mirage = "4.5.0";
-            };
-          } self;
+        in mkUnikernelPackages {
+          unikernelName = throw "Put the unikernel name here";
+          # list external dependencies here
+          depexts = with pkgs; [ ];
+          # specify mirage files in a non-root directory
+          #mirageDir = "mirage";
+          monorepoQuery = {
+            # solve for non-trunk compiler
+            ocaml-base-compiler = "*";
+            # workaround https://github.com/RyanGibb/hillingar/issues/3
+            # if a package doesn't have an overlay to build with dune
+            # find a version https://github.com/dune-universe/opam-overlays/
+            # or
+            # find a version https://github.com/dune-universe/mirage-opam-overlays/
+            #<package> = "<version>";
+          };
+          query = {
+            # solve for non-trunk compiler
+            ocaml-base-compiler = "*";
+            # use a specific version of mirage
+            #mirage = "4.5.0";
+          };
+        } self;
 
         defaultPackage = self.packages.${system}.unix;
-      }
-    );
+      });
 }

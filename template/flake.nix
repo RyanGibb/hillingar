@@ -34,11 +34,18 @@
             depexts = with pkgs; [ ];
             # specify mirage files in a non-root directory
             #mirageDir = "mirage";
-            # solve for non-trunk compiler
             monorepoQuery = {
+              # solve for non-trunk compiler
               ocaml-base-compiler = "*";
+              # workaround https://github.com/RyanGibb/hillingar/issues/3
+              # if a package doesn't have an overlay to build with dune
+              # find a version https://github.com/dune-universe/opam-overlays/
+              # or
+              # find a version https://github.com/dune-universe/mirage-opam-overlays/
+              #<package> = "<version>";
             };
             query = {
+              # solve for non-trunk compiler
               ocaml-base-compiler = "*";
               # use a specific version of mirage
               #mirage = "4.5.0";

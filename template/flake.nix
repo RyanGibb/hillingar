@@ -34,6 +34,15 @@
             depexts = with pkgs; [ ];
             # specify mirage files in a non-root directory
             #mirageDir = "mirage";
+            # solve for non-trunk compiler
+            monorepoQuery = {
+              ocaml-base-compiler = "*";
+            };
+            query = {
+              ocaml-base-compiler = "*";
+              # use a specific version of mirage
+              #mirage = "4.5.0";
+            };
           } self;
 
         defaultPackage = self.packages.${system}.unix;

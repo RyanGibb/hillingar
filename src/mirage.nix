@@ -83,7 +83,7 @@ in rec {
           }
         );
       };
-    in scope.overrideScope' overlay;
+    in scope.overrideScope overlay;
 
   mkUnikernelPackages = {
       unikernelName,

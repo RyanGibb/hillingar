@@ -18,12 +18,19 @@ $ sed -i 's/throw "Put the unikernel name here"/"<unikernel-name>"/g' flake.nix
 $ nix build .\#<target>
 ```
 
-Read more at [ryan.freumh.org/blog/hillingar](https://ryan.freumh.org/blog/hillingar).
-
 See an example in [examples/hello](examples/hello), and build it from the project root with `nix build .\?dir=examples/hello`.
+If you've already configured your unikernel with `mirage configure` and checked in into version control, pass `configured = true;` to `mkUnikernelPackages`.
+
+Other outputs which may be useful for debugging include:
+
+- `<target>-configured`: the project after having invoked `mirage configure`.
+- `<target>-monorepo`: the result of [opam monorepo](https://github.com/tarides/opam-monorepo) that is provided to the unikernel build in the `duniverse` directory.
+- `<target>-scope`: the [Nixpkgs scope](https://github.com/NixOS/nixpkgs/blob/a89c4f5411da503aedbce629be535ec2da1e7f7b/lib/customisation.nix#L417-L552) created by an opam solve for the `dune build`.
+- `<target>` is an alias for `<target>-scope.<unikernel-name`.
+
+Where target is one of xen, qubes, unix, macosx, virtio, hvt, spt, muen, or genode.
+
+Read more at [ryan.freumh.org/blog/hillingar](https://ryan.freumh.org/blog/hillingar).
 
 Built on top of [tweag/opam-nix/pull/18](https://github.com/tweag/opam-nix/pull/18).
 
-### Configured Unikernels
-
-If you've already configured your unikernel with `mirage configure`, see [examples/hello-configured](examples/hello-configured) for an example of using Hillingar. Build it from the project root with `nix build .\?dir=examples/hello-configured`.

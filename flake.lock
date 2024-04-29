@@ -37,11 +37,11 @@
     "mirage-opam-overlays": {
       "flake": false,
       "locked": {
-        "lastModified": 1661959605,
-        "narHash": "sha256-CPTuhYML3F4J58flfp3ZbMNhkRkVFKmBEYBZY5tnQwA=",
+        "lastModified": 1710922379,
+        "narHash": "sha256-j4QREQDUf8oHOX7qg6wAOupgsNQoYlufxoPrgagD+pY=",
         "owner": "dune-universe",
         "repo": "mirage-opam-overlays",
-        "rev": "05f1c1823d891ce4d8adab91f5db3ac51d86dc0b",
+        "rev": "797cb363df3ff763c43c8fbec5cd44de2878757e",
         "type": "github"
       },
       "original": {
@@ -87,7 +87,9 @@
         "flake-utils": [
           "flake-utils"
         ],
-        "mirage-opam-overlays": "mirage-opam-overlays",
+        "mirage-opam-overlays": [
+          "mirage-opam-overlays"
+        ],
         "nixpkgs": [
           "nixpkgs"
         ],
@@ -170,6 +172,7 @@
     "root": {
       "inputs": {
         "flake-utils": "flake-utils",
+        "mirage-opam-overlays": "mirage-opam-overlays",
         "nix-filter": "nix-filter",
         "nixpkgs": "nixpkgs",
         "opam-nix": "opam-nix",

@@ -20,7 +20,6 @@
               ocaml-base-compiler = "*";
             };
             query = {
-              ocaml-base-compiler = "*";
               mirage = "4.5.0";
             };
           } ./.;

@@ -1,4 +1,4 @@
-{ pkgs, lib, flake-utils, opam-nix, opam2json, nix-filter, opam-repository, opam-overlays, ... }:
+{ pkgs, lib, flake-utils, opam-nix, opam2json, nix-filter, opam-repository, opam-overlays, mirage-opam-overlays, ... }:
 
 let
   inherit (opam-nix) queryToScope buildOpamMonorepo buildOpamProject;

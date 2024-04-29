@@ -28,11 +28,16 @@
       flake = false;
     };
     opam-nix.inputs.opam-overlays.follows = "opam-overlays";
+    mirage-opam-overlays = {
+      url = "github:dune-universe/mirage-opam-overlays";
+      flake = false;
+    };
+    opam-nix.inputs.mirage-opam-overlays.follows = "mirage-opam-overlays";
   };
 
   outputs =
     { self, nixpkgs, flake-utils, opam-nix, opam2json, nix-filter,
-      opam-repository, opam-overlays, ... }@inputs:
+      opam-repository, opam-overlays, mirage-opam-overlays, ... }@inputs:
     {
       defaultTemplate.path = ./template;
     } // flake-utils.lib.eachDefaultSystem (system:
@@ -42,7 +47,7 @@
         opam-nix = inputs.opam-nix.lib.${system};
         mirage-nix = import ./src/mirage.nix
           { inherit pkgs lib flake-utils opam-nix opam2json nix-filter
-          opam-repository opam-overlays; };
+          opam-repository opam-overlays mirage-opam-overlays; };
       in {
         lib = mirage-nix;
       });

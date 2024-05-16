@@ -12,7 +12,7 @@ in rec {
     # We could also get them from nixpkgs but they may not be up to date.
     let configure-scope = queryToScope { } ({ mirage = "*"; } // query);
     in pkgs.stdenv.mkDerivation {
-      name = "configured-src";
+      name = "mirage-${unikernelName}-${target}";
       # only copy these files and only rebuild when they change
       src = with nix-filter.lib;
         filter {
@@ -37,9 +37,9 @@ in rec {
       phases = [ "unpackPhase" "configurePhase" "installPhase" "fixupPhase" ];
       configurePhase = ''
         mirage configure -f ${mirageDir}/config.ml -t ${target}
-        # Rename the opam file for package name consistency
-        # And move to root so a recursive search for opam files isn't required
-        cp ${mirageDir}/mirage/${unikernelName}-${target}.opam ${unikernelName}.opam
+        # Move Opam file to root so a recursive search for opam files isn't
+        # required. Prefix it so it doesn't interfere with other packages.
+        cp ${mirageDir}/mirage/${unikernelName}-${target}.opam mirage-${unikernelName}-${target}.opam
       '';
       installPhase = "cp -R . $out";
     };
@@ -47,18 +47,19 @@ in rec {
   # collect all dependancy sources in a scope
   mkScopeMonorepo = monorepoQuery: src: buildOpamMonorepo { } src monorepoQuery;
 
-  # read all the opam files from the configured source and build the ${unikernelName} package
+  # read all the opam files from the configured source and build the unikernel.
+  # Return the attrs { unikernel; scope }.
   mkScopeOpam =
     unikernelName: mirageDir: depexts: monorepoQuery: queryArgs: query: src:
     let
-      scope = buildOpamProject queryArgs unikernelName src query;
+      pkg_name = src.name; # Specified by 'configureSrcFor'
       overlay = final: prev: {
-        "${unikernelName}" = prev.${unikernelName}.overrideAttrs (_:
+        "${pkg_name}" = prev.${pkg_name}.overrideAttrs (_:
           let monorepo-scope = mkScopeMonorepo monorepoQuery src;
           in {
             phases = [ "unpackPhase" "preBuild" "buildPhase" "installPhase" ];
             # TODO pick depexts of deps in monorepo
-            buildInputs = prev.${unikernelName}.buildInputs ++ depexts;
+            buildInputs = prev.${pkg_name}.buildInputs ++ depexts;
             preBuild = let
               # TODO get dune build to pick up symlinks
               createDep = name: path:
@@ -88,7 +89,11 @@ in rec {
             '';
           });
       };
-    in scope.overrideScope overlay;
+    in rec {
+      scope =
+        (buildOpamProject queryArgs pkg_name src query).overrideScope' overlay;
+      unikernel = scope.${pkg_name};
+    };
 
   mkUnikernelPackages = { unikernelName, mirageDir ? "."
     , depexts ? with pkgs; [ ], overlays ? [ ], monorepoQuery ? { }
@@ -97,10 +102,10 @@ in rec {
     if configured then {
       unikernel =
         (mkScopeOpam unikernelName mirageDir depexts monorepoQuery queryArgs
-          query src).${unikernelName};
+          query src).unikernel;
       scope =
-        mkScopeOpam unikernelName mirageDir depexts monorepoQuery queryArgs
-        query src;
+        (mkScopeOpam unikernelName mirageDir depexts monorepoQuery queryArgs
+          query src).scope;
       monorepo = mkScopeMonorepo monorepoQuery;
     } else
       let
@@ -127,12 +132,12 @@ in rec {
               targets;
           in builtins.listToAttrs mappedTargets;
         targetUnikernels =
-          mapAttrs' (target: scope: nameValuePair target scope.${unikernelName})
+          mapAttrs' (target: scope: nameValuePair target scope.unikernel)
           (mapTargets
             (mkScopeOpam unikernelName mirageDir depexts monorepoQuery queryArgs
               query));
         targetScopes =
-          mapAttrs' (target: scope: nameValuePair "${target}-scope" scope)
+          mapAttrs' (target: scope: nameValuePair "${target}-scope" scope.scope)
           (mapTargets
             (mkScopeOpam unikernelName mirageDir depexts monorepoQuery queryArgs
               query));

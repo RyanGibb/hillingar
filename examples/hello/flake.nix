@@ -17,7 +17,10 @@
           depexts = with pkgs; [ ];
           # solve for non-trunk compiler
           monorepoQuery = { ocaml-base-compiler = "*"; };
-          query = { mirage = "4.5.0"; };
+          query = {
+            mirage = "4.5.0";
+            ocaml-base-compiler = "*";
+          };
         } ./.;
 
         defaultPackage = self.packages.${system}.unix;

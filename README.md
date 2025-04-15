@@ -3,6 +3,8 @@
 
 > An arctic mirage
 
+[ryan.freumh.org/hillingar.html](https://ryan.freumh.org/hillingar.html)
+
 <div align="center">
     <img width="200" src="readme/nix-snowflake.svg" alt="Nix snowflake">
     <img width="200" src="readme/mirage-logo.svg" alt="Mirage logo"></td>
@@ -29,8 +31,6 @@ Other outputs which may be useful for debugging include:
 - `<target>` is an alias for `<target>-scope.<unikernel-name`.
 
 Where target is one of xen, qubes, unix, macosx, virtio, hvt, spt, muen, or genode.
-
-Read more at [ryan.freumh.org/blog/hillingar](https://ryan.freumh.org/blog/hillingar).
 
 Built on top of [tweag/opam-nix/pull/18](https://github.com/tweag/opam-nix/pull/18).
 

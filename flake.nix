@@ -38,7 +38,10 @@
   outputs = { self, nixpkgs, flake-utils, opam-nix, opam2json, nix-filter
     , opam-repository, opam-overlays, mirage-opam-overlays, ... }@inputs:
     {
-      defaultTemplate.path = ./template;
+      defaultTemplate = {
+        path = ./template;
+        description = "MirageOS project flake.nix";
+      };
       formatter = nixpkgs.lib.genAttrs nixpkgs.lib.systems.flakeExposed
         (system: nixpkgs.legacyPackages.${system}.nixfmt);
     } // flake-utils.lib.eachDefaultSystem (system:
